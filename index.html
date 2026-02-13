@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>💌 From Alex</title>
+<title>💌 From Jo</title>
 
 <style>
 :root{
@@ -12,7 +12,6 @@
   --pink3:#ff4d88;
   --txt:#6f153d;
 }
-
 *{box-sizing:border-box}
 html,body{height:100%}
 
@@ -25,17 +24,8 @@ body{
 }
 
 /* Floating hearts */
-.hearts{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:1;
-}
-.heart{
-  position:absolute;
-  opacity:.6;
-  animation:floatUp linear forwards;
-}
+.hearts{ position:fixed; inset:0; pointer-events:none; z-index:1; }
+.heart{ position:absolute; opacity:.6; animation:floatUp linear forwards; }
 @keyframes floatUp{
   from{transform:translateY(40px);opacity:0;}
   10%{opacity:.6;}
@@ -53,52 +43,45 @@ body{
 }
 .card{
   width:min(600px, 92vw);
-  background:rgba(255,255,255,.85);
+  background:rgba(255,255,255,.86);
   border-radius:20px;
   padding:28px;
   text-align:center;
   box-shadow:0 20px 50px rgba(0,0,0,.15);
   backdrop-filter:blur(10px);
+  border:1px solid #ffd0e1;
 }
 
-h1{
-  margin:0 0 10px;
-  color:var(--pink3);
-}
-
-.sub{
-  margin:6px 0 16px;
-  opacity:.9;
-}
+h1{ margin:0 0 10px; color:var(--pink3); }
+.sub{ margin:6px 0 16px; opacity:.92; line-height:1.35; }
 
 /* Envelope */
 .envelope{
   margin:16px auto;
-  width:300px;
+  width:min(320px, 86vw);
   height:200px;
   position:relative;
   cursor:pointer;
+  user-select:none;
 }
-
 .env-body{
   position:absolute;
   inset:0;
   background:var(--pink1);
   border-radius:16px;
   box-shadow:0 14px 28px rgba(0,0,0,.15);
+  border:1px solid #ff8fb5;
 }
-
 .flap{
   position:absolute;
   width:0;height:0;
-  border-left:150px solid transparent;
-  border-right:150px solid transparent;
+  border-left:160px solid transparent;
+  border-right:160px solid transparent;
   border-top:100px solid var(--pink2);
   top:0;left:0;
   transform-origin:top;
-  transition:transform .6s ease;
+  transition:transform .6s cubic-bezier(.2,.9,.2,1);
 }
-
 .letter{
   position:absolute;
   left:12px;right:12px;
@@ -111,10 +94,10 @@ h1{
   justify-content:center;
   align-items:center;
   transform:translateY(80px);
-  transition:transform .6s ease;
-  font-weight:bold;
+  transition:transform .6s cubic-bezier(.2,.9,.2,1);
+  font-weight:800;
+  border:1px solid #ffd0e1;
 }
-
 .open .flap{transform:rotateX(180deg);}
 .open .letter{transform:translateY(0);}
 
@@ -125,42 +108,61 @@ h1{
   transition:opacity .6s ease, transform .6s ease;
   pointer-events:none;
 }
-
-.show{
-  opacity:1 !important;
-  transform:translateY(0) !important;
-  pointer-events:auto !important;
+#hiddenContent.show{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
 }
 
 /* Buttons */
 #buttonArea{
   position:relative;
-  height:80px;
+  height:96px;
   margin-top:10px;
   display:grid;
   place-items:center;
 }
-
 button{
   border:none;
   padding:12px 18px;
   border-radius:999px;
-  font-weight:bold;
+  font-weight:900;
+  font-size:16px;
   cursor:pointer;
   box-shadow:0 10px 20px rgba(0,0,0,.15);
 }
-
-.yes{background:var(--pink3);color:white;}
+.yes{ background:var(--pink3); color:white; }
 
 .no{
   background:#ffd0e1;
+  color:#5a0f32;
   position:absolute;
   left:60%;
   top:50%;
   transform:translate(-50%,-50%);
 }
 
-/* Result */
+/* Sassy toast message */
+.toast{
+  margin:10px auto 0;
+  width:fit-content;
+  max-width:min(520px, 92vw);
+  background:rgba(255, 255, 255, .9);
+  border:1px solid #ffd0e1;
+  border-radius:14px;
+  padding:10px 12px;
+  box-shadow:0 12px 24px rgba(0,0,0,.12);
+  opacity:0;
+  transform:translateY(6px);
+  transition: opacity .25s ease, transform .25s ease;
+  font-weight:700;
+}
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Result overlay */
 .result{
   position:fixed;
   inset:0;
@@ -169,14 +171,15 @@ button{
   display:none;
   place-items:center;
   z-index:5;
+  padding:24px;
 }
-
 .result-box{
   background:white;
-  padding:30px;
+  padding:26px;
   border-radius:20px;
   text-align:center;
   box-shadow:0 20px 50px rgba(0,0,0,.2);
+  border:1px solid #ffd0e1;
 }
 
 /* Confetti */
@@ -185,13 +188,14 @@ canvas{
   inset:0;
   pointer-events:none;
   display:none;
+  z-index:4;
 }
 </style>
 </head>
 
 <body>
 
-<div class="hearts" id="hearts"></div>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
 
 <div class="wrap">
   <div class="card">
@@ -202,26 +206,22 @@ canvas{
       open the envelope 👇
     </div>
 
-    <div class="envelope" id="envelope">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
       <div class="env-body"></div>
-      <div class="letter">
-        will you be my valentine? 💕
-      </div>
+      <div class="letter">will you be my valentine? 💕</div>
       <div class="flap"></div>
     </div>
 
     <!-- HIDDEN UNTIL OPEN -->
     <div id="hiddenContent">
-
-      <div class="sub">
-        pick your answer carefully 😌
-      </div>
+      <div class="sub">pick your answer carefully 😌</div>
 
       <div id="buttonArea">
         <button class="yes" id="yesBtn">YES 💗</button>
         <button class="no" id="noBtn">NO 😏</button>
       </div>
 
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
     </div>
 
   </div>
@@ -231,30 +231,30 @@ canvas{
   <div class="result-box">
     <h2>OKAYYY PERIODDDD 💖</h2>
     <p>you just secured the cutest valentine ever 🥰</p>
+    <p><b>i love you</b> — now come here 😌</p>
   </div>
 </div>
 
 <canvas id="confetti"></canvas>
 
 <script>
-
-/* Envelope reveal logic */
+/* Envelope reveal */
 const envelope = document.getElementById("envelope");
 const hiddenContent = document.getElementById("hiddenContent");
 
-envelope.addEventListener("click", ()=>{
+function toggleEnvelope(){
   envelope.classList.toggle("open");
-
-  if(envelope.classList.contains("open")){
-    hiddenContent.classList.add("show");
-  } else {
-    hiddenContent.classList.remove("show");
-  }
+  if(envelope.classList.contains("open")) hiddenContent.classList.add("show");
+  else hiddenContent.classList.remove("show");
+}
+envelope.addEventListener("click", toggleEnvelope);
+envelope.addEventListener("keydown", (e)=>{
+  if(e.key==="Enter" || e.key===" ") toggleEnvelope();
 });
 
 /* Floating hearts */
 const hearts = document.getElementById("hearts");
-const heartChars=["💖","💗","💕","💘"];
+const heartChars=["💖","💗","💕","💘","💞"];
 setInterval(()=>{
   const h=document.createElement("div");
   h.className="heart";
@@ -267,45 +267,126 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),8000);
 },500);
 
-/* NO button chaos */
-const noBtn=document.getElementById("noBtn");
-const area=document.getElementById("buttonArea");
+/* Toast helper */
+const toast = document.getElementById("toast");
+let toastTimer = null;
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toast.classList.remove("show"), 2200);
+}
+
+/* NO button: mobile-friendly sassy message + move */
+const noBtn = document.getElementById("noBtn");
+const area = document.getElementById("buttonArea");
+
+const noMessages = [
+  "i know you didn’t just click that on purpose 😭",
+  "be serious rn 😌",
+  "wrong answer, try again 💗",
+  "okay… now why would you do that 😭",
+  "access denied. choose YES.",
+  "babe the YES button is literally right there →"
+];
+let noCount = 0;
 
 function moveNo(){
-  const x=Math.random()*(area.clientWidth-100);
-  const y=Math.random()*(area.clientHeight-40);
-  noBtn.style.left=x+"px";
-  noBtn.style.top=y+"px";
-}
-noBtn.addEventListener("mouseenter",moveNo);
-noBtn.addEventListener("click",(e)=>{e.preventDefault();celebrate();});
+  const pad = 8;
+  const maxX = area.clientWidth - noBtn.offsetWidth - pad*2;
+  const maxY = area.clientHeight - noBtn.offsetHeight - pad*2;
 
-/* Confetti */
+  const x = pad + Math.random() * Math.max(0, maxX);
+  const y = pad + Math.random() * Math.max(0, maxY);
+
+  noBtn.style.left = (x + noBtn.offsetWidth/2) + "px";
+  noBtn.style.top  = (y + noBtn.offsetHeight/2) + "px";
+  noBtn.style.transform = "translate(-50%, -50%)";
+}
+
+function handleNo(e){
+  e.preventDefault();
+  const msg = noMessages[Math.min(noCount, noMessages.length - 1)];
+  noCount++;
+  showToast(msg);
+  moveNo();
+}
+
+/* Works on desktop hover + mobile tap */
+noBtn.addEventListener("mouseenter", () => { showToast("nice try 😏"); moveNo(); });
+noBtn.addEventListener("click", handleNo);
+noBtn.addEventListener("touchstart", handleNo, {passive:false});
+
+/* Confetti (simple + reliable) */
 const canvas=document.getElementById("confetti");
 const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+function resize(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
 
-function celebrate(){
-  document.getElementById("result").style.display="grid";
+function confettiBurst(ms=2200){
   canvas.style.display="block";
+  const colors=["#ff4d88","#ff69b4","#ffb6c1","#ffd0e1","#ffffff"];
+  let parts = Array.from({length:220},()=>({
+    x: Math.random()*canvas.width,
+    y: -20 - Math.random()*canvas.height*0.2,
+    w: 6 + Math.random()*6,
+    h: 8 + Math.random()*10,
+    vx: -2 + Math.random()*4,
+    vy: 2 + Math.random()*5,
+    rot: Math.random()*Math.PI,
+    vr: -0.15 + Math.random()*0.3,
+    c: colors[Math.floor(Math.random()*colors.length)],
+    a: 0.95
+  }));
 
-  for(let i=0;i<200;i++){
-    ctx.fillStyle="#ff4d88";
-    ctx.beginPath();
-    ctx.arc(Math.random()*canvas.width,Math.random()*canvas.height,4,0,Math.PI*2);
-    ctx.fill();
-  }
-
-  setTimeout(()=>{
+  const start = performance.now();
+  function frame(t){
+    const elapsed = t - start;
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    canvas.style.display="none";
-    document.getElementById("result").style.display="none";
-  },2000);
+
+    parts.forEach(p=>{
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.03;
+      p.rot += p.vr;
+      p.a *= 0.995;
+
+      ctx.save();
+      ctx.globalAlpha = p.a;
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+
+    parts = parts.filter(p => p.a > 0.08 && p.y < canvas.height+80);
+
+    if(elapsed < ms) requestAnimationFrame(frame);
+    else {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      canvas.style.display="none";
+    }
+  }
+  requestAnimationFrame(frame);
 }
 
-document.getElementById("yesBtn").addEventListener("click",celebrate);
-
+/* YES flow */
+const result = document.getElementById("result");
+function celebrateYes(){
+  if(!envelope.classList.contains("open")) envelope.classList.add("open");
+  hiddenContent.classList.add("show");
+  confettiBurst();
+  result.style.display="grid";
+  setTimeout(()=> result.style.display="none", 4200);
+}
+document.getElementById("yesBtn").addEventListener("click", celebrateYes);
 </script>
+
 </body>
 </html>
