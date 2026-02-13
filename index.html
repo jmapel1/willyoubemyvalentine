@@ -82,6 +82,8 @@ h1{ margin:0 0 10px; color:var(--pink3); }
   transform-origin:top;
   transition:transform .6s cubic-bezier(.2,.9,.2,1);
 }
+
+/* Letter (WHITE CARD) */
 .letter{
   position:absolute;
   left:12px;right:12px;
@@ -97,9 +99,17 @@ h1{ margin:0 0 10px; color:var(--pink3); }
   transition:transform .6s cubic-bezier(.2,.9,.2,1);
   font-weight:800;
   border:1px solid #ffd0e1;
+
+  /* ✅ hidden until envelope is clicked */
+  opacity:0;
 }
-.open .flap{transform:rotateX(180deg);}
-.open .letter{transform:translateY(0);}
+
+/* When open: flap flips + letter slides up + becomes visible */
+.open .flap{ transform:rotateX(180deg); }
+.open .letter{
+  transform:translateY(0);
+  opacity:1;
+}
 
 /* Hidden content until envelope opens */
 #hiddenContent{
@@ -200,15 +210,18 @@ canvas{
 <div class="wrap">
   <div class="card">
 
-    <h1>hi babe 💗</h1>
+    <h1>From Jo 💗</h1>
     <div class="sub">
       i made you something small and cute.<br>
-      open the envelope 👇
+      click the envelope 👇
     </div>
 
     <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
       <div class="env-body"></div>
+
+      <!-- ✅ Letter starts hidden; shows when envelope has class "open" -->
       <div class="letter">will you be my valentine? 💕</div>
+
       <div class="flap"></div>
     </div>
 
@@ -229,9 +242,9 @@ canvas{
 
 <div class="result" id="result">
   <div class="result-box">
-    <h2>OKAYYY PERIODDDD 💖</h2>
+    <h2>OKAYYYY 💖</h2>
     <p>you just secured the cutest valentine ever 🥰</p>
-    <p><b>i love you</b> — now come here 😌</p>
+    <p><b>i love you pookie 💖</p>
   </div>
 </div>
 
@@ -318,7 +331,7 @@ noBtn.addEventListener("mouseenter", () => { showToast("nice try 😏"); moveNo(
 noBtn.addEventListener("click", handleNo);
 noBtn.addEventListener("touchstart", handleNo, {passive:false});
 
-/* Confetti (simple + reliable) */
+/* Confetti */
 const canvas=document.getElementById("confetti");
 const ctx=canvas.getContext("2d");
 function resize(){
